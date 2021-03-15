@@ -41,7 +41,7 @@ namespace KelvinTodo.Controllers
         }
 
         [HttpPut("{id}/done")]
-        public IActionResult ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
+        public ActionResult<TodoDto> ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
         {
             var todo = _todoRepository.GetById(id);
             if (todo == null)
