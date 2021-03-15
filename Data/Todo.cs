@@ -36,7 +36,7 @@ namespace KelvinTodo.Data
         {
             Id = id;
             _events = events;
-            _events.ToList().ForEach(evt => Apply(evt));
+            _events.ToList().ForEach(Apply);
         }
 
         public void Create(CreateTodoCommand command)
@@ -84,16 +84,21 @@ namespace KelvinTodo.Data
                     break;
             }
         }
+    }
 
-        public TodoDto ToDto()
+    public static class TodoDtoMapper
+    {
+        public static TodoDto ToDto(this Todo todo)
         {
-            return new TodoDto
+            if (todo == null) return null;
+            
+            return new()
             {
-                Id = Id,
-                Name = Name,
-                Description = Description,
-                Done = Done,
-            };
+                Id = todo.Id,
+                Name = todo.Name,
+                Description = todo.Description,
+                Done = todo.Done,
+            };   
         }
     }
 }

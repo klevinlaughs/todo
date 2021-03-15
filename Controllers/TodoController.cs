@@ -19,13 +19,14 @@ namespace KelvinTodo.Controllers
         public TodoController(ILogger<TodoController> logger)
         {
             _logger = logger;
-            _todoRepository = new();
+            _todoRepository = new TodoRepository();
         }
 
         [HttpGet("{id}")]
         public TodoDto GetById([FromRoute] int id)
         {
-            return _todoRepository.GetById(id).ToDto();
+            var todoDto = _todoRepository.GetById(id).ToDto();
+            return todoDto;
         }
 
         [HttpPost]
@@ -40,12 +41,15 @@ namespace KelvinTodo.Controllers
         }
 
         [HttpPut("{id}/done")]
-        public TodoDto ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
+        public IActionResult ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
         {
             var todo = _todoRepository.GetById(id);
+            if (todo == null)
+                return NotFound();
+
             todo.UpdateDone(command);
             _todoRepository.Save(todo);
-            return todo.ToDto();
+            return Ok(todo.ToDto());
         }
 
         [HttpDelete("{id}")] 
