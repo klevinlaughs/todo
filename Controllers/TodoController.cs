@@ -16,10 +16,13 @@ namespace KelvinTodo.Controllers
         private readonly ILogger<TodoController> _logger;
         private readonly TodoRepository _todoRepository;
 
-        public TodoController(ILogger<TodoController> logger)
+        public TodoController(
+            ILogger<TodoController> logger,
+            TodoRepository todoRepository
+            )
         {
             _logger = logger;
-            _todoRepository = new TodoRepository();
+            _todoRepository = todoRepository;
         }
 
         [HttpGet("{id}")]

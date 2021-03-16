@@ -73,9 +73,12 @@ namespace KelvinTodo.Data
             // Build up a 'current state'. Useful for validation logic
             // Current state is an example of a projection (a view based on events)
             // Right now this class is a mix of both the aggregate as well as projection.
-            // Aggregate is just the stream of events
+            // Aggregate is just the stream of events (where the entity is identified by ID)
             // The current state is the projection, but we could have some other projection
             // e.g. number of times edited or something, or last edited
+            
+            // The projection should really be a consumer of the events and build up their own current state
+            // whether that's in memory or sql or nosql...
             switch (evt)
             {
                 case TodoCreated todoCreated:

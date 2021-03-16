@@ -9,8 +9,8 @@ namespace KelvinTodo.Data
     // We are not using them for queries, we are not using them for reads or queries or views.
     public class TodoRepository
     {
-        private static IDictionary<int, IEnumerable<IEvent>> _eventStore = new Dictionary<int, IEnumerable<IEvent>>();
-        private static int counter = 0;
+        private IDictionary<int, IEnumerable<IEvent>> _eventStore = new Dictionary<int, IEnumerable<IEvent>>();
+        private int counter = 0;
 
         public Todo GetDefault()
         {
