@@ -37,6 +37,11 @@ namespace KelvinTodo.Controllers
         {
             // TODO: send to a mediatr or something, signalr?
             // There should be a command handler
+            // There would eventually be some consumer of the created event
+            // One of those would be a "TodoProjection".
+            
+            // TODO: who is responsible for generating IDs? it depends, but maybe the more correct approach is for the
+            // client to send it. Some discussion: https://github.com/gregoryyoung/m-r/issues/17
             var todo = _todoRepository.CreateNew();
             todo.Create(command);
             _todoRepository.Save(todo);
@@ -58,6 +63,8 @@ namespace KelvinTodo.Controllers
         [HttpDelete("{id}")] 
         public void Delete()
         {
+            // TODO: how to delete in CQRS
+            throw new NotImplementedException();
         }
     }
 }
