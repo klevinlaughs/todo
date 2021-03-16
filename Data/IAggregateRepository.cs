@@ -1,4 +1,6 @@
-﻿namespace KelvinTodo.Data
+﻿using System.Threading.Tasks;
+
+namespace KelvinTodo.Data
 {
     // Repositories only responsibility should be to build aggregate roots and save aggregate roots
     // They should only handle commands.
@@ -8,8 +10,8 @@
     //https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/
     public interface IAggregateRepository<T, in TKey> where T : Aggregate<TKey> where TKey : struct
     {
-        T CreateNew();
-        T GetById(TKey id);
-        void Save(T agg);
+        Task<T> CreateNewAsync();
+        Task<T> GetByIdAsync(TKey id);
+        Task SaveAsync(T agg);
     }
 }

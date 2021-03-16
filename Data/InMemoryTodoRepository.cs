@@ -1,6 +1,7 @@
 using KelvinTodo.Events;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace KelvinTodo.Data
 {
@@ -12,22 +13,24 @@ namespace KelvinTodo.Data
         private readonly IDictionary<int, IEnumerable<IEvent>> _eventStore = new Dictionary<int, IEnumerable<IEvent>>();
         private int _counter;
 
-        public Todo CreateNew()
+        public Task<Todo> CreateNewAsync()
         {
             _counter++;
             var id = _counter;
             var evts = new List<IEvent>();
-            return new Todo(id, evts);
+            return Task.FromResult(new Todo(id, evts));
         }
 
-        public Todo GetById(int id)
+        public Task<Todo> GetByIdAsync(int id)
         {
-            return _eventStore.TryGetValue(id, out var events) ? new Todo(id, events) : null;
+            var todo = _eventStore.TryGetValue(id, out var events) ? new Todo(id, events) : null;
+            return Task.FromResult(todo);
         }
 
-        public void Save(Todo todo)
+        public Task SaveAsync(Todo todo)
         {
             _eventStore[todo.Id] = todo.Events;
+            return Task.CompletedTask;
         }
     }
 }

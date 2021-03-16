@@ -26,14 +26,15 @@ namespace KelvinTodo.Controllers
         }
 
         [HttpGet("{id}")]
-        public TodoDto GetById([FromRoute] int id)
+        public async Task<TodoDto> GetById([FromRoute] int id)
         {
-            var todoDto = _todoRepository.GetById(id).ToDto();
-            return todoDto;
+            // TODO: this should come from a query model?
+            var todo = await _todoRepository.GetByIdAsync(id);
+            return todo.ToDto();
         }
 
         [HttpPost]
-        public TodoDto Create([FromBody] CreateTodoCommand command)
+        public async Task<TodoDto> Create([FromBody] CreateTodoCommand command)
         {
             // TODO: send to a mediatr or something, signalr?
             // There should be a command handler
@@ -43,21 +44,21 @@ namespace KelvinTodo.Controllers
             // TODO: who is responsible for generating IDs? it depends, but maybe the more correct approach is for the
             // client to send it. Some discussion: https://github.com/gregoryyoung/m-r/issues/17
             // https://stackoverflow.com/questions/43433318/cqrs-command-return-values
-            var todo = _todoRepository.CreateNew();
+            var todo = await _todoRepository.CreateNewAsync();
             todo.Create(command);
-            _todoRepository.Save(todo);
+            await _todoRepository.SaveAsync(todo);
             return todo.ToDto();
         }
 
         [HttpPut("{id}/done")]
-        public ActionResult<TodoDto> ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
+        public async Task<ActionResult<TodoDto>> ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
         {
-            var todo = _todoRepository.GetById(id);
+            var todo = await _todoRepository.GetByIdAsync(id);
             if (todo == null)
                 return NotFound();
 
             todo.UpdateDone(command);
-            _todoRepository.Save(todo);
+            await _todoRepository.SaveAsync(todo);
             return Ok(todo.ToDto());
         }
 
