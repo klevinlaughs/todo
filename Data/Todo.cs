@@ -29,10 +29,9 @@ namespace KelvinTodo.Data
         public string Description => _state.Description;
         public bool Done => _state.Done;
 
-        public Todo(int id, IEnumerable<IEvent> events)
+        public Todo(int id, IEnumerable<IEvent> events) : base(id, events)
         {
-            Id = id;
-            _events = events;
+            // This is rebuilding a projection from the ground up with each constructor call
             _events.ToList().ForEach(Apply);
         }
 

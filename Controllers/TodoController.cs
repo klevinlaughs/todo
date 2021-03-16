@@ -42,6 +42,7 @@ namespace KelvinTodo.Controllers
             
             // TODO: who is responsible for generating IDs? it depends, but maybe the more correct approach is for the
             // client to send it. Some discussion: https://github.com/gregoryyoung/m-r/issues/17
+            // https://stackoverflow.com/questions/43433318/cqrs-command-return-values
             var todo = _todoRepository.CreateNew();
             todo.Create(command);
             _todoRepository.Save(todo);

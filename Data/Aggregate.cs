@@ -4,16 +4,25 @@ using KelvinTodo.Events;
 
 namespace KelvinTodo.Data
 {
-    public abstract class Aggregate<TKey>
+    public abstract class Aggregate<TKey> where TKey : struct
     {
         /**
          * Unique identifier per stream
          */
-        public TKey Id { get; set; }
-        // Events
-        protected IEnumerable<IEvent> _events { get; set; } = new List<IEvent>();
+        public TKey Id { get; }
+        
+        protected IEnumerable<IEvent> _events { get; set; }
+        /**
+         * Events
+         */
         public IReadOnlyList<IEvent> Events => _events.ToList().AsReadOnly();
 
+        protected Aggregate(TKey id, IEnumerable<IEvent> events)
+        {
+            Id = id;
+            _events = events;
+        }
+            
         // Apply Events
     }
 }
