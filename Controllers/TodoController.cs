@@ -14,11 +14,11 @@ namespace KelvinTodo.Controllers
     public class TodoController : ControllerBase
     {
         private readonly ILogger<TodoController> _logger;
-        private readonly TodoRepository _todoRepository;
+        private readonly ITodoRepository _todoRepository;
 
         public TodoController(
             ILogger<TodoController> logger,
-            TodoRepository todoRepository
+            ITodoRepository todoRepository
             )
         {
             _logger = logger;
@@ -37,7 +37,7 @@ namespace KelvinTodo.Controllers
         {
             // TODO: send to a mediatr or something, signalr?
             // There should be a command handler
-            var todo = _todoRepository.GetDefault();
+            var todo = _todoRepository.CreateNew();
             todo.Create(command);
             _todoRepository.Save(todo);
             return todo.ToDto();

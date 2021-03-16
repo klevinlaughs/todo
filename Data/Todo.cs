@@ -6,6 +6,8 @@ using KelvinTodo.Commands;
 
 namespace KelvinTodo.Data
 {
+    // In memory data model, the usage is an example of projection.
+    // But this model could also just be used for any validation. But it should only hold what is necessary.
     class CurrentState
     {
         public string Name { get; set; }
@@ -20,17 +22,12 @@ namespace KelvinTodo.Data
         public bool Done { get; set; }   
     }
 
-    public class Todo { 
-        // This is the unique identifier per stream
-        public int Id { get; }
-        private IEnumerable<IEvent> _events { get; set; }
+    public class Todo: Aggregate<int> { 
         private CurrentState _state = new();
 
         public string Name => _state.Name;
         public string Description => _state.Description;
         public bool Done => _state.Done;
-
-        public IList<IEvent> Events => _events.ToList().AsReadOnly();
 
         public Todo(int id, IEnumerable<IEvent> events)
         {
