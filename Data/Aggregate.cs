@@ -12,7 +12,6 @@ namespace KelvinTodo.Data
         public TKey Id { get; set; }
         // Events
         protected IEnumerable<IEvent> _events { get; set; } = new List<IEvent>();
-
         public IReadOnlyList<IEvent> Events => _events.ToList().AsReadOnly();
 
         // Apply Events
