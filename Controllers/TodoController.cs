@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using KelvinTodo.Commands;
 using KelvinTodo.Data;
+using MediatR;
 
 namespace KelvinTodo.Controllers
 {
@@ -16,14 +17,17 @@ namespace KelvinTodo.Controllers
     {
         private readonly ILogger<TodoController> _logger;
         private readonly ITodoRepository _todoRepository;
+        private readonly IMediator _mediator;
 
         public TodoController(
             ILogger<TodoController> logger,
-            ITodoRepository todoRepository
+            ITodoRepository todoRepository,
+            IMediator mediator
             )
         {
             _logger = logger;
             _todoRepository = todoRepository;
+            _mediator = mediator;
         }
 
         [HttpGet("{id:int}")]
@@ -37,17 +41,8 @@ namespace KelvinTodo.Controllers
         [HttpPost]
         public async Task<TodoDto> Create([FromBody] CreateTodoCommand command, CancellationToken cancellationToken)
         {
-            // TODO: send to a mediatr or something, signalr?
-            // There should be a command handler
-            // There would eventually be some consumer of the created event
-            // One of those would be a "TodoProjection".
+            var todo = await _mediator.Send(command, cancellationToken);
             
-            // TODO: who is responsible for generating IDs? it depends, but maybe the more correct approach is for the
-            // client to send it. Some discussion: https://github.com/gregoryyoung/m-r/issues/17
-            // https://stackoverflow.com/questions/43433318/cqrs-command-return-values
-            var todo = await _todoRepository.CreateNewAsync(cancellationToken);
-            todo.Create(command);
-            await _todoRepository.SaveAsync(todo);
             return todo.ToDto();
         }
 
