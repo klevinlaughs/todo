@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,7 +26,7 @@ namespace KelvinTodo.Controllers
             _todoRepository = todoRepository;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<TodoDto> GetById([FromRoute] int id)
         {
             // TODO: this should come from a query model?
@@ -34,7 +35,7 @@ namespace KelvinTodo.Controllers
         }
 
         [HttpPost]
-        public async Task<TodoDto> Create([FromBody] CreateTodoCommand command)
+        public async Task<TodoDto> Create([FromBody] CreateTodoCommand command, CancellationToken cancellationToken)
         {
             // TODO: send to a mediatr or something, signalr?
             // There should be a command handler
@@ -44,17 +45,17 @@ namespace KelvinTodo.Controllers
             // TODO: who is responsible for generating IDs? it depends, but maybe the more correct approach is for the
             // client to send it. Some discussion: https://github.com/gregoryyoung/m-r/issues/17
             // https://stackoverflow.com/questions/43433318/cqrs-command-return-values
-            var todo = await _todoRepository.CreateNewAsync();
+            var todo = await _todoRepository.CreateNewAsync(cancellationToken);
             todo.Create(command);
             await _todoRepository.SaveAsync(todo);
             return todo.ToDto();
         }
 
-        [HttpPut("{id}/done")]
-        public async Task<ActionResult<TodoDto>> ToggleDone([FromRoute] int id, [FromBody] ToggleTodoDoneCommand command)
+        [HttpPut("{id:int}/done")]
+        public async Task<ActionResult<TodoDto>> ToggleDone([FromRoute] int id, [FromBody] SetTodoDoneCommand command)
         {
             var todo = await _todoRepository.GetByIdAsync(id);
-            if (todo == null)
+            if (todo is null)
                 return NotFound();
 
             todo.UpdateDone(command);
@@ -62,8 +63,8 @@ namespace KelvinTodo.Controllers
             return Ok(todo.ToDto());
         }
 
-        [HttpDelete("{id}")] 
-        public void Delete()
+        [HttpDelete("{id:int}")] 
+        public void Delete(int id)
         {
             // TODO: how to delete in CQRS
             throw new NotImplementedException();

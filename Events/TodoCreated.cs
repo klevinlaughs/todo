@@ -8,5 +8,6 @@ namespace KelvinTodo.Events
         public string Name { get; init; }
         public string Description { get; init; }
         public DateTimeOffset Timestamp { get; init; }
+        public int Version => 1;
     }
 }

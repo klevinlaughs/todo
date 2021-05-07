@@ -49,7 +49,7 @@ namespace KelvinTodo.Data
             Apply(evt);
         }
 
-        public void UpdateDone(ToggleTodoDoneCommand command)
+        public void UpdateDone(SetTodoDoneCommand command)
         {
             if (_state.Done == command.Done)
                 return;

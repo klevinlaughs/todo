@@ -1,4 +1,7 @@
 namespace KelvinTodo.Events
 {
-    public interface IEvent {}
+    public interface IEvent
+    {
+        int Version { get; }
+    }
 }

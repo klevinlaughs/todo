@@ -1,6 +1,6 @@
 namespace KelvinTodo.Commands 
 {
-    public class ToggleTodoDoneCommand
+    public class SetTodoDoneCommand
     {
         public bool Done { get; set; }
     }

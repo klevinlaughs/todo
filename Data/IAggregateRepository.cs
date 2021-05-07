@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace KelvinTodo.Data
 {
@@ -10,7 +11,7 @@ namespace KelvinTodo.Data
     //https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/covariance-contravariance/
     public interface IAggregateRepository<T, in TKey> where T : Aggregate<TKey> where TKey : struct
     {
-        Task<T> CreateNewAsync();
+        Task<T> CreateNewAsync(CancellationToken cancellationToken);
         Task<T> GetByIdAsync(TKey id);
         Task SaveAsync(T agg);
     }

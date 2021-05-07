@@ -1,6 +1,7 @@
 using KelvinTodo.Events;
 using System.Collections.Generic;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace KelvinTodo.Data
@@ -9,11 +10,11 @@ namespace KelvinTodo.Data
     
     public class InMemoryTodoRepository : ITodoRepository
     {
-        // In memory event store
+        // In memory event store, stream per "entity"
         private readonly IDictionary<int, IEnumerable<IEvent>> _eventStore = new Dictionary<int, IEnumerable<IEvent>>();
         private int _counter;
 
-        public Task<Todo> CreateNewAsync()
+        public Task<Todo> CreateNewAsync(CancellationToken cancellationToken)
         {
             _counter++;
             var id = _counter;
